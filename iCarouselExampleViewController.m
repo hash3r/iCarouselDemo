@@ -31,7 +31,7 @@
     //set up data
     wrap = YES;
     self.items = [NSMutableArray array];
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 3; i++)
     {
         [items addObject:[NSNumber numberWithInt:i]];
     }
@@ -80,6 +80,7 @@
     //configure carousel
     carousel.type = iCarouselTypeCustom;
 	carousel.vertical = YES;
+	carousel.scrollToItemBoundary = NO;
     navItem.title = @"Custom";
 }
 
@@ -251,35 +252,35 @@
 {
     CGFloat height = 200.0;
 	
-	CGFloat tilt = 1.0/sqrt(2.3);
-	CGFloat spacing = 1.;
+	CGFloat tilt = 1/sqrt(2.3);
+	CGFloat spacing = 0.9;
 	
-	float lineSpace = 5.0;
-	float dz = 0.0;
+	float lineSpace = 3.0;
+//	float dz = 0.0;
 	float dy = 0.0;
-	float strech = 0.1;
+	float strech = 0.2;
 	float angle = 0;
 	
 	if (offset > 1.0)
 	{
-		dz = 1000;
+//		dz = 1000;
 	}
 	else if (offset > 0)
 	{
 		angle = -3 * sinf(M_PI * offset/3.0);
-		dz = -(angle) * 100;
+//		dz = -(angle) * 100;
 		dy = -(angle) * 10;
 	}
 	else if(offset < -lineSpace)
 	{
-		dz = (offset + lineSpace);
+//		dz = (offset + lineSpace);
 		dy = -(offset + lineSpace) * 100;
 		angle = 0;
 	}
+//	NSLog(@"offset: %f",offset);
+	transform = CATransform3DTranslate(transform, 0.0f, strech*(offset * height / tilt) + dy + (spacing/2)*height, strech*(offset / tilt) * 10);
 	
-	transform = CATransform3DTranslate(transform, 0.0f, strech*(offset * height / tilt) + dy + (spacing/2)*height, strech*(offset * height / tilt) + dz);
-	
-	transform = CATransform3DRotate(transform, angle * M_PI*0.1, 1.0f, 0.0f, 0.0f);
+	transform = CATransform3DRotate(transform, angle * M_PI * 0.1, M_PI/2 * 1.f, 0.0f, 0.0f);
 	
 	return transform;
 }
@@ -288,29 +289,23 @@
 {
 	switch (option)
 	{
-		case iCarouselOptionFadeMin:
-			return -4.0;
-		case iCarouselOptionFadeMax:
-			return 0.01;
-		case iCarouselOptionFadeRange:
-			return 3.0;
+//		case iCarouselOptionFadeMin:
+//			return -2.;
+//		case iCarouselOptionFadeMax:
+//			return 2;
+//		case iCarouselOptionFadeRange:
+//			return .5;
 		case iCarouselOptionTilt:
-			return 0.0;
+			return 1;
 		case iCarouselOptionSpacing:
-			return 0.5;
-		case iCarouselOptionWrap:
-			return 0.0;
-		case iCarouselOptionVisibleItems:
-			return 13.0;
+			return 1;
+//		case iCarouselOptionWrap:
+//			return 0.0;
+//		case iCarouselOptionVisibleItems:
+//			return 4.0;
 		default:
 			return value;
 	}
-}
-
-- (CGFloat)carousel:(iCarousel *)carousel itemAlphaForOffset:(CGFloat)offset
-{
-	//set opacity based on distance from camera
-	return 1.0f - fminf(fmaxf(offset, 0.0f), 1.0f);
 }
 
 #pragma mark -
